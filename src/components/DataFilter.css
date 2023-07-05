@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    justify-content: center;
+    
+}
+  
+label {
+    font-weight: bold;
+    margin-right: 1rem;
+}
+  
+input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-right: 1rem;
+ }
+  

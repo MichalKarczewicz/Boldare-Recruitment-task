@@ -1,5 +1,4 @@
 import './App.css';
-import Employee from './components/Employee';
 import Employees from './components/Employees';
 
 function App() {
