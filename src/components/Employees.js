@@ -2,10 +2,18 @@ import React, { useState } from 'react'
 import sluzba from '../data/sluzba.json'
 import DataFilter from './DataFilter';
 import'./Employees.css';
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 function Employees() {
   const [dataValue, setDataValue] = useState('');
   const [datePickerValue, setDataPickerValue] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 5;
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = sluzba.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(sluzba.length / recordsPerPage);
+  const numbers = [...Array(npage+1).keys()].slice(1)
 
   const handleDataFilter = (data) => {
     setDataValue(data);
@@ -14,6 +22,23 @@ function Employees() {
   const handleDataPickerFilter = (data) => {
     setDataPickerValue(data);
   };
+
+  
+function nextPage(){
+    if(currentPage !== lastIndex){
+        setCurrentPage(currentPage+1);
+    }
+}
+  
+function changeCurrentPage(id){
+      setCurrentPage(id);
+}
+  
+function prevPage(){
+  if(currentPage !== firstIndex){
+    setCurrentPage(currentPage-1);
+  }
+}
 
   return (
     <div className='card'>
@@ -31,7 +56,7 @@ function Employees() {
         </thead>
         <tbody>
         {
-            sluzba.map((employee) => {
+            records.map((employee, i) => {
                 if (dataValue && !employee.id.toString().includes(dataValue) 
                 && !employee.firstName.includes(dataValue) 
                 && !employee.lastName.includes(dataValue) 
@@ -43,9 +68,9 @@ function Employees() {
                 if (datePickerValue && !employee.dateOfBirth.toString().includes(
                     new Date(datePickerValue).toLocaleDateString()
                 )) { return null }
-                
+
                 return (
-                <tr key={employee.id}>
+                <tr key={i}>
                     <td>{employee.id}</td>
                     <td>{employee.firstName}</td>
                     <td>{employee.lastName}</td>
@@ -59,9 +84,28 @@ function Employees() {
 
         </tbody>
     </table>
+    <nav>
+        <ul className='pagination'>
+            <li className='page-item'>
+                <a href="#" className='page-link' onClick={prevPage}>Prev</a>
+            </li>
+            {
+                numbers.map((number, i) => (
+                    <li className={`page-item ${currentPage === number ? 'active' : ''}`} key={i}>
+                        <a href="#" className='page-link' onClick={() => changeCurrentPage(number)}>{number}</a>
+                    </li>
+                ))
+            }
+             <li className='page-item'>
+                <a href="#" className='page-link' onClick={nextPage}>Next</a>
+            </li>
+        </ul>
+    </nav>
   </div>
   
   )
+
+
 }
 
 export default Employees
