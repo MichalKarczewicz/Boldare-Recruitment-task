@@ -5,13 +5,15 @@ import'./Employees.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 function Employees() {
+  const [data, setData] = useState(sluzba);
+  const [order, setOrder] = useState("asc");
   const [dataValue, setDataValue] = useState('');
   const [datePickerValue, setDataPickerValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = sluzba.slice(firstIndex, lastIndex);
+  const records = data.slice(firstIndex, lastIndex);
   const npage = Math.ceil(sluzba.length / recordsPerPage);
   const numbers = [...Array(npage+1).keys()].slice(1)
 
@@ -23,18 +25,33 @@ function Employees() {
     setDataPickerValue(data);
   };
 
+
+const sortFunction = (i) => {
+    if(order === "asc"){
+        const sorted = [...data].sort((a,b) => 
+        a[i].toLowerCase() > b[i].toLowerCase() ? 1 : -1)
+    setData(sorted);
+    setOrder("desc")
+    }
+    if(order === "desc"){
+        const sorted = [...data].sort((a,b) => 
+        a[i].toLowerCase() < b[i].toLowerCase() ? 1 : -1)
+    setData(sorted);
+    setOrder("asc")
+    }
+}
   
-function nextPage(){
+const nextPage =() => {
     if(currentPage !== lastIndex){
         setCurrentPage(currentPage+1);
     }
 }
   
-function changeCurrentPage(id){
+const changeCurrentPage = (id) =>{
       setCurrentPage(id);
 }
   
-function prevPage(){
+const prevPage = () =>{
   if(currentPage !== firstIndex){
     setCurrentPage(currentPage-1);
   }
@@ -47,10 +64,10 @@ function prevPage(){
         <thead>
         <tr>
             <th>ID</th>
-            <th>Imię</th>
-            <th>Nazwisko</th>
+            <th onClick={() => sortFunction("firstName")}>Imię</th>
+            <th onClick={() => sortFunction("lastName")}>Nazwisko</th>
             <th>Data urodzenia</th>
-            <th>Funkcja</th>
+            <th onClick={() => sortFunction("function")}>Funkcja</th>
             <th>Doświadczenie (w latach)</th>
         </tr>
         </thead>
